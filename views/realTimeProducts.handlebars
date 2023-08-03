@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lista de productos en tiempo real</title>
+</head>
+<body>
+  <h1>Lista de productos en tiempo real</h1>
+  <ul id="product-list">
+    {{#each products}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+
+  <form id="product-form">
+    <input type="text" name="productName" placeholder="Nombre del producto" required>
+    <button type="submit">Agregar producto</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const productForm = document.getElementById('product-form');
+
+    productForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(productForm);
+      const productName = formData.get('productName');
+      socket.emit('addProduct', productName);
+      productForm.reset();
+    });
+
+    socket.on('updateProducts', (products) => {
+      const productList = document.getElementById('product-list');
+      productList.innerHTML = '';
+
+      products.forEach((product) => {
+        const li = document.createElement('li');
+        li.textContent = product;
+        productList.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>
