@@ -8,20 +8,16 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// Configurar Handlebars como motor de plantillas
 const viewsPath = path.join(__dirname, 'views');
 app.set('views', viewsPath);
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
-// Configurar ruta para servir archivos estáticos (CSS, JS, etc.) desde la carpeta "public"
 const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
-// Variables para almacenar los productos
 let products = [];
 
-// Rutas
 app.get('/', (req, res) => {
   res.redirect('/realtimeproducts');
 });
